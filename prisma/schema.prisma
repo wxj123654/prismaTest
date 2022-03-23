@@ -7,8 +7,56 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// 用户
 model User {
-  id       Int    @id @default(autoincrement())
-  userName String @unique
+  id       Int       @id @default(autoincrement())
+  username String    @unique
   password String
+  videoes  Video[]
+  history  History[]
+  comment  Comment[]
+}
+
+model History {
+  id      Int    @id @default(autoincrement())
+  time    String
+  User    User   @relation(fields: [userId], references: [id])
+  userId  Int
+  video   Video  @relation(fields: [videoId], references: [id])
+  videoId Int    @unique
+}
+
+// 视频标签
+model Tag {
+  id    Int     @id @default(autoincrement())
+  name  String
+  video Video[]
+}
+
+// 视频
+model Video {
+  id         Int       @id @default(autoincrement())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  Tag        Tag[]
+  title      String
+  videoTime  String
+  watched    Int?      @default(0)
+  createTime DateTime? @default(now())
+  star       Int?      @default(0)
+  comment    Comment[]
+  synopsis   String
+  url        String
+  History    History?
+}
+
+// 评论
+model Comment {
+  id       Int    @id @default(autoincrement())
+  parentId Int    @default(0)
+  content  String
+  Video    Video  @relation(fields: [videoId], references: [id])
+  videoId  Int
+  User     User?  @relation(fields: [userId], references: [id])
+  userId   Int?
 }
