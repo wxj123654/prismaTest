@@ -15,6 +15,7 @@ model User {
   videoes  Video[]
   history  History[]
   comment  Comment[]
+  star     Star[]
 }
 
 model History {
@@ -35,19 +36,30 @@ model Tag {
 
 // 视频
 model Video {
-  id         Int       @id @default(autoincrement())
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  Tag        Tag[]
-  title      String
-  videoTime  String
-  watched    Int?      @default(0)
-  createTime DateTime? @default(now())
-  star       Int?      @default(0)
-  comment    Comment[]
-  synopsis   String
-  url        String
-  History    History?
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  Tag         Tag[]
+  title       String
+  videoTime   String
+  watched     Int?      @default(0)
+  createTime  DateTime? @default(now())
+  starUserIds String    @default("")
+  comment     Comment[]
+  synopsis    String
+  url         String
+  History     History?
+  star        Star[]
+}
+
+model Star {
+  id        Int      @id @default(autoincrement())
+  User      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  Video     Video?   @relation(fields: [videoId], references: [id])
+  videoId   Int?
+  Comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
 }
 
 // 评论
@@ -57,6 +69,7 @@ model Comment {
   content  String
   Video    Video  @relation(fields: [videoId], references: [id])
   videoId  Int
-  User     User?  @relation(fields: [userId], references: [id])
-  userId   Int?
+  User     User   @relation(fields: [userId], references: [id])
+  userId   Int
+  star     Star[]
 }

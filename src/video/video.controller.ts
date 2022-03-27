@@ -1,5 +1,6 @@
-import { Controller, Delete, Get, Put, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
 import { Video } from '@prisma/client';
+import { query } from 'express';
 import { VideoService } from './video.service';
 
 @Controller('video')
